@@ -22,7 +22,7 @@ $sheet->Range("B1")->{'Value'} = 'Target';
 
 my $dbh = DBI->connect("dbi:SQLite:dbname=test.sdltm");
 
-# ソースとターゲットのみ対象とする
+# source and target only
 my $select = "select source_segment, target_segment from translation_units;"; 
 
 my $sth = $dbh->prepare($select);
@@ -39,7 +39,6 @@ while(my ($source, $target) = $sth->fetchrow()){
 
 $dbh->disconnect;
 
-#close $out;
 $book->SaveAs( $dirname . '\\' . 'results.xlsx' );
 $book->Close;
 $Excel->quit();
@@ -48,7 +47,10 @@ print "Done!\n";
 
 sub seikei {
 	my $s = shift;
-	$s = decode('utf8', $s);
+
+	# If you don't decode it, the characters will be garbled.
+	$s = decode('utf8', $s); 
+
 	$s =~ s{^.+<Value>(.+)</Value>.+$}{$1};
 
 	return $s;
