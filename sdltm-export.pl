@@ -5,6 +5,7 @@ use DBI;
 use Win32::OLE qw( in with CP_UTF8 );
 use Win32::OLE::Const 'Microsoft Excel';
 use File::Basename;
+use Encode;
 
 my $dirname = dirname (__FILE__);
 
@@ -27,7 +28,8 @@ my $select = "select source_segment, target_segment from translation_units;";
 my $sth = $dbh->prepare($select);
 $sth->execute;
 
-open my $out, '>', 'result.txt' or die;
+
+#open my $out, '>', 'result.txt' or die;
 
 my $count = 2;
 while(my ($source, $target) = $sth->fetchrow()){
@@ -50,6 +52,7 @@ print "Done!\n";
 
 sub seikei {
 	my $s = shift;
+	$s = decode('utf8', $s);
 	$s =~ s{^.+<Value>(.+)</Value>.+$}{$1};
 
 	return $s;
