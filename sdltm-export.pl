@@ -28,17 +28,13 @@ my $select = "select source_segment, target_segment from translation_units;";
 my $sth = $dbh->prepare($select);
 $sth->execute;
 
-
-#open my $out, '>', 'result.txt' or die;
-
 my $count = 2;
 while(my ($source, $target) = $sth->fetchrow()){
 	$source = &seikei($source);
 	$target = &seikei($target);
-	#print {$out} $source . "\t" . $target . "\n";
 	$sheet->Range("A$count")->{'Value'} = $source;
-    $sheet->Range("B$count")->{'Value'} = $target;
-    $count++;
+	$sheet->Range("B$count")->{'Value'} = $target;
+	$count++;
 }
 
 $dbh->disconnect;
