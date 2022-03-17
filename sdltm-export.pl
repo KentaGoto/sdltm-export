@@ -48,10 +48,14 @@ print "Done!\n";
 sub seikei {
 	my $s = shift;
 
-	# If you don't decode it, the characters will be garbled.
 	$s = decode('utf8', $s); 
 
-	$s =~ s{^.+<Value>(.+)</Value>.+$}{$1};
+	my $str;
 
-	return $s;
+	# Valueタグ内のテキストを取る。複数ある場合に対応
+	while ($s =~ s{<Value>(.+?)</Value>}{$1}s ) {
+		$str .= $1;
+	}
+
+	return $str;
 }
