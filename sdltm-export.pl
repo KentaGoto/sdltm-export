@@ -67,7 +67,7 @@ foreach my $sdltm ( @sdltm ){
 	if (-e $name){
 		warn "$name already exists.\n";
 	} else {
-    	rename $tmp_name, $name or warn "Cannot rename files: $!";
+		rename $tmp_name, $name or warn "Cannot rename files: $!";
 	}
 
 	# Save to Excel.
