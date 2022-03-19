@@ -24,10 +24,11 @@ print "Processing...\n";
 foreach my $sdltm ( @sdltm ){
 	print $sdltm . "\n";
 
-	# DBIモジュールが日本語パスに対応していないので、chdirする。
+	# Move to the directory because the DBI module does not support Japanese.
 	my ($name, $dir) = fileparse($sdltm);
 	chdir $dir;
-	# ファイル名を一時的にリネームする。重複は年末ジャンボ宝くじ一等の確率
+
+	# Temporarily rename the file.
 	my $tmp_name = int(rand(20000000));
 	$tmp_name .= '.sdltm';
 	if (-e $tmp_name) {
@@ -42,10 +43,10 @@ foreach my $sdltm ( @sdltm ){
 	$sheet->Range("A1")->{'Value'} = 'Source';
 	$sheet->Range("B1")->{'Value'} = 'Target';
 	
-	# DB接続
+	# Connect to DB.
 	my $dbh = DBI->connect("dbi:SQLite:dbname=$tmp_name");
 	
-	# source and target only
+	# Source and Target only.
 	my $select = "select source_segment, target_segment from translation_units;"; 
 	
 	my $sth = $dbh->prepare($select);
@@ -62,14 +63,14 @@ foreach my $sdltm ( @sdltm ){
 	
 	$dbh->disconnect;
 
-	# ファイル名を戻す
+	# Undo the file name.
 	if (-e $name){
 		warn "$name already exists.\n";
 	} else {
     	rename $tmp_name, $name or warn "Cannot rename files: $!";
 	}
 
-	# Excelに保存
+	# Save to Excel.
 	( my $xlsx = $sdltm ) =~ s{\.sdltm}{.xlsx}i;
 	$book->SaveAs( $xlsx );
 	$book->Close;
@@ -85,7 +86,7 @@ sub seikei {
 	$s = decode('utf8', $s); 
 	my $str;
 
-	# Valueタグ内のテキストを取る。複数ある場合に対応
+	# Get the text surrounded by Value tags.
 	while ( $s =~ s{<Value>(.+?)</Value>}{$1}s ) {
 		$str .= $1;
 	}
