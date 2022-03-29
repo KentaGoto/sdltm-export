@@ -7,4 +7,4 @@ https://github.com/KentaGoto/sdltm-export-web
 MIT
 
 ## Author
-Kenta Got
+Kenta Goto
