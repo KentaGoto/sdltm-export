@@ -54,8 +54,8 @@ foreach my $sdltm ( @sdltm ){
 	
 	my $count = 2;
 	while(my ($source, $target) = $sth->fetchrow()){
-		$source = &seikei($source);
-		$target = &seikei($target);
+		$source = &format($source);
+		$target = &format($target);
 		$sheet->Range("A$count")->{'Value'} = $source;
 		$sheet->Range("B$count")->{'Value'} = $target;
 		$count++;
@@ -80,7 +80,7 @@ $Excel->quit();
 
 print "\nDone!\n";
 
-sub seikei {
+sub format {
 	my $s = shift;
 
 	$s = decode('utf8', $s); 
